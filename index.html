@@ -3,10 +3,189 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Node.js Playground</title>
+  <title>Node.js Playground - Shop Management Demo</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f0f0f0;
+      color: #333;
+    }
+
+    header {
+      background-color: #ff5733;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+
+    main {
+      padding: 20px;
+    }
+
+    .section {
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      margin-bottom: 20px;
+      padding: 20px;
+    }
+
+    .section h2 {
+      margin-top: 0;
+      color: #ff5733;
+    }
+
+    .product {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 15px;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      background-color: #fff;
+    }
+
+    .product img {
+      max-width: 100px;
+      border-radius: 5px;
+    }
+
+    .product-details {
+      flex-grow: 1;
+      margin-left: 20px;
+    }
+
+    .product-actions {
+      display: flex;
+      align-items: center;
+    }
+
+    .product-actions button {
+      background-color: #28a745;
+      border: none;
+      color: white;
+      padding: 10px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .product-actions button:hover {
+      background-color: #218838;
+    }
+
+    .cart {
+      background-color: #e2e2e2;
+      padding: 10px;
+      border-radius: 5px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .cart h3 {
+      margin-top: 0;
+    }
+
+    .cart-items {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .cart-items li {
+      padding: 5px;
+      border-bottom: 1px solid #ddd;
+    }
+
+    footer {
+      background-color: #ff5733;
+      color: white;
+      text-align: center;
+      padding: 10px;
+      position: fixed;
+      width: 100%;
+      bottom: 0;
+    }
+  </style>
 </head>
 <body>
-  <h1>Welcome to the Node.js Playground</h1>
-  <p>This is a simple front-end page served by Node.js and Express.</p>
+  <header>
+    <h1>Welcome to the Node.js Shop Management System</h1>
+  </header>
+
+  <main>
+    <section class="section">
+      <h2>Product List</h2>
+      <div class="product">
+        <img src="https://via.placeholder.com/100" alt="Product 1">
+        <div class="product-details">
+          <h3>Product 1</h3>
+          <p>Price: $10.00</p>
+        </div>
+        <div class="product-actions">
+          <button onclick="addToCart('Product 1', 10)">Add to Cart</button>
+        </div>
+      </div>
+
+      <div class="product">
+        <img src="https://via.placeholder.com/100" alt="Product 2">
+        <div class="product-details">
+          <h3>Product 2</h3>
+          <p>Price: $15.00</p>
+        </div>
+        <div class="product-actions">
+          <button onclick="addToCart('Product 2', 15)">Add to Cart</button>
+        </div>
+      </div>
+
+      <!-- Add more products as needed -->
+    </section>
+
+    <section class="section cart">
+      <h2>Shopping Cart</h2>
+      <ul class="cart-items" id="cartItems">
+        <!-- Cart items will be added here dynamically -->
+      </ul>
+      <p id="cartTotal">Total: $0.00</p>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2024 Node.js Playground. All rights reserved.</p>
+  </footer>
+
+  <script>
+    const cart = [];
+
+    function addToCart(productName, productPrice) {
+      // Check if the product is already in the cart
+      const existingProduct = cart.find(item => item.name === productName);
+      if (existingProduct) {
+        existingProduct.quantity++;
+      } else {
+        cart.push({ name: productName, price: productPrice, quantity: 1 });
+      }
+      updateCart();
+    }
+
+    function updateCart() {
+      const cartItems = document.getElementById('cartItems');
+      const cartTotal = document.getElementById('cartTotal');
+      
+      // Clear existing cart items
+      cartItems.innerHTML = '';
+      
+      let total = 0;
+      
+      cart.forEach(item => {
+        total += item.price * item.quantity;
+        const li = document.createElement('li');
+        li.textContent = `${item.name} - $${item.price} x ${item.quantity}`;
+        cartItems.appendChild(li);
+      });
+      
+      cartTotal.textContent = `Total: $${total.toFixed(2)}`;
+    }
+  </script>
 </body>
 </html>

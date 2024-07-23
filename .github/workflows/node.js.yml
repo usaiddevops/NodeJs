@@ -13,33 +13,27 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    # Step 1: Checkout Code
     - name: Checkout code
       uses: actions/checkout@v3
 
-    # Step 2: Set up Node.js
     - name: Set up Node.js
       uses: actions/setup-node@v3
       with:
-        node-version: '18' # Replace with the Node.js version your project requires
+        node-version: '18' # Use the version of Node.js required by your project
 
-    # Step 3: Install Dependencies
     - name: Install dependencies
       run: npm ci
 
-    # Step 4: Linting (Optional)
-    - name: Lint code
-      run: npm run lint # Ensure you have a "lint" script defined in package.json
+    # Remove or comment out the linting step if not used
+    # - name: Lint code
+    #   run: npm run lint
 
-    # Step 5: Run Tests
     - name: Run tests
       run: npm test
 
-    # Step 6: Build (Optional)
     - name: Build project
-      run: npm run build # Ensure you have a "build" script defined in package.json
+      run: npm run build
 
-    # Step 7: Deploy (Optional)
     - name: Deploy
       env:
         SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
@@ -51,7 +45,6 @@ jobs:
         scp -i private_key.pem -r ./dist $DEPLOYMENT_USER@$DEPLOYMENT_SERVER:/path/to/deploy
         ssh -i private_key.pem $DEPLOYMENT_USER@$DEPLOYMENT_SERVER 'cd /path/to/deploy && npm install --production && pm2 restart all'
 
-    # Step 8: Notify (Optional)
     - name: Notify Deployment
       run: |
-        echo "Deployment complete!" # Customize notification as needed
+        echo "Deployment complete!"

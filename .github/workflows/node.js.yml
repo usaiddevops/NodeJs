@@ -1,4 +1,4 @@
-name: Node.js CI
+name: Node.js CI/CD Pipeline
 
 on:
   push:
@@ -13,24 +13,45 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    # Step 1: Checkout Code
     - name: Checkout code
       uses: actions/checkout@v3
 
+    # Step 2: Set up Node.js
     - name: Set up Node.js
       uses: actions/setup-node@v3
       with:
-        node-version: '18' # Specify your Node.js version
+        node-version: '18' # Replace with the Node.js version your project requires
 
+    # Step 3: Install Dependencies
     - name: Install dependencies
       run: npm ci
 
+    # Step 4: Linting (Optional)
+    - name: Lint code
+      run: npm run lint # Ensure you have a "lint" script defined in package.json
 
+    # Step 5: Run Tests
+    - name: Run tests
+      run: npm test
 
-    - name: Build
-      run: npm run build # Replace with actual build command if needed
+    # Step 6: Build (Optional)
+    - name: Build project
+      run: npm run build # Ensure you have a "build" script defined in package.json
 
+    # Step 7: Deploy (Optional)
     - name: Deploy
+      env:
+        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        DEPLOYMENT_SERVER: ${{ secrets.DEPLOYMENT_SERVER }}
+        DEPLOYMENT_USER: ${{ secrets.DEPLOYMENT_USER }}
       run: |
-        # Add your deployment commands here
-        # For example, if deploying to a server, you might use SCP or another tool
-        echo "Deploy step - Add your deployment commands here"
+        echo "$SSH_PRIVATE_KEY" > private_key.pem
+        chmod 600 private_key.pem
+        scp -i private_key.pem -r ./dist $DEPLOYMENT_USER@$DEPLOYMENT_SERVER:/path/to/deploy
+        ssh -i private_key.pem $DEPLOYMENT_USER@$DEPLOYMENT_SERVER 'cd /path/to/deploy && npm install --production && pm2 restart all'
+
+    # Step 8: Notify (Optional)
+    - name: Notify Deployment
+      run: |
+        echo "Deployment complete!" # Customize notification as needed

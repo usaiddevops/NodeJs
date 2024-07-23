@@ -36,7 +36,7 @@ jobs:
 
     - name: Deploy
       env:
-        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        SSH_PRIVATE_KEY: ${{ secrets.ACTIONS_DEPLOY_KEY }}
         DEPLOYMENT_SERVER: ${{ secrets.DEPLOYMENT_SERVER }}
         DEPLOYMENT_USER: ${{ secrets.DEPLOYMENT_USER }}
       run: |
